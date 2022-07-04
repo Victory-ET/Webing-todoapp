@@ -1,14 +1,50 @@
 import "./App.css";
 import { React, useState } from "react";
 import TaskList from "./components/TaskList";
+import { useQuery, gql, useMutation } from "@apollo/client";
+
+const GET_TODOS = gql`
+  query {
+    listTodos {
+      data {
+        todoItem
+        taskCompleted
+        id
+      }
+    }
+  }
+`;
+
+const ADD_TODOS = gql`
+mutation AddTodo($todoItem: String!){
+  createTodo(
+		data: {
+      todoItem: $todoItem
+    }
+  )
+  {data{
+    todoItem,
+    taskCompleted
+  }}
+}
+`;
+
+
 
 function App() {
   //state to manage input field
   const [todo, setTodo] = useState("");
 
-  const addNewTodo = async (todo) => {
-    // function to add new todo to the list from the input field
-  };
+  const { loading, error, data, refetch } = useQuery(GET_TODOS)
+  const [addTodo, { isadding, e }] = useMutation(ADD_TODOS);
+  
+  if (loading) return <p>Getting to_dos...</p>;
+  if (error) return <p>An error occurred :(</p>;
+  if (isadding) return 'Submitting...';
+  if (e) return `Submission error! ${error.message}`;
+
+
+
   return (
     <div className=" h-screen flex justify-center items-center flex-col gap-8">
       <div className=" flex justify-center items-center gap-6">
@@ -26,13 +62,16 @@ function App() {
           className=" h-full px-5 py-2 bg-[#0264F6] text-white font-medium rounded-md"
           onClick={() => {
             //execute function to add new todo to the list
-            addNewTodo(todo);
+            addTodo({ variables: { todoItem: todo } });
+            refetch();
+            setTodo("");
           }}
         >
           Add Todo Item
         </button>
       </div>
-      <TaskList />
+      {/* passing data to TaskList */}
+      <TaskList todos={data} gettodo={GET_TODOS}/>
     </div>
   );
 }
