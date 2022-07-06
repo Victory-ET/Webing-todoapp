@@ -9,12 +9,11 @@ import {
   ApolloProvider,
 } from "@apollo/client";
 
-const accesstoken = "your access token";
 const client = new ApolloClient({
   uri: "your unique url",
   cache: new InMemoryCache(),
   headers: {
-    Authorization: `Bearer ${accesstoken}`,
+    Authorization: `Bearer ${process.env.ACESS_TOKEN}`,
   },
 });
 
