@@ -10,10 +10,10 @@ import {
 } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: "your unique url",
+  uri: process.env.REACT_APP_WEBINY_URL,
   cache: new InMemoryCache(),
   headers: {
-    Authorization: `Bearer ${process.env.ACESS_TOKEN}`,
+    Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
   },
 });
 

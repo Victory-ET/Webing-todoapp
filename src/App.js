@@ -44,7 +44,6 @@ function App() {
   if (e) return `Submission error! ${error.message}`;
 
 
-
   return (
     <div className=" h-screen flex justify-center items-center flex-col gap-8">
       <div className=" flex justify-center items-center gap-6">
